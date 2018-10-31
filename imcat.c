@@ -45,7 +45,8 @@ static void set_console_mode(void)
 #else
 static void get_terminal_size(void)
 {
-	FILE* f = popen( "stty size", "r" );
+	FILE* f = (void*)(long)popen( "stty size", "r" ); // closes off an implicit int->pointer cast warning. 
+	// see https://stackoverflow.com/questions/25381610/cast-int-to-pointer-why-cast-to-long-first-as-in-p-void-42 for why the cast to long is neccessary.
 	if ( !f )
 	{
 		fprintf( stderr, "Failed to determine terminal size using stty.\n" );
